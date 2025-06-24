@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SortMyLiked Dashboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin: 24px 0;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background: #f3f3f3;
+        }
+        img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        #yearHistogram {
+            margin-top: 32px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Your Dashboard</h1>
+    <p>Number of Liked Songs: <strong>{{ user_data.num_liked_songs }}</strong></p>
+
+    <h2>Top 3 Artists</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Ranking</th>
+                <th>Profile Picture</th>
+                <th>Artist Name</th>
+                <th>Number of Liked Songs by this artist</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for artist in user_data.most_frequently_liked_artists %}
+            <tr>
+                <td>{{ artist.ranking }}</td>
+                <td>
+                    {% if artist.image %}
+                        <img src="{{ artist.image }}" alt="{{ artist.name }}">
+                    {% else %}
+                        <span>N/A</span>
+                    {% endif %}
+                </td>
+                <td>{{ artist.name }}</td>
+                <td>{{ artist.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Liked Songs by Release Year</h2>
+    <canvas id="yearHistogram" width="600" height="300"></canvas>
+
+    <script>
+        // Safely load data, defaulting to empty object if not present
+        const yearData = {{ user_data.song_distribution_by_year | default({}) | tojson | safe }};
+
+        const years = Object.keys(yearData).sort((a, b) => a - b);
+        const counts = years.map(year => yearData[year]);
+
+        const ctx = document.getElementById('yearHistogram').getContext('2d');
+        const yearHistogram = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Number of Liked Songs',
+                    data: counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Release Year'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Liked Songs Count'
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

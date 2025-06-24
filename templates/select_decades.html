@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Decades</title>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #191414;
+            color: #FFFFFF;
+            font-family: 'Circular', 'Helvetica', 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #1DB954;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            font-size: 1.2em;
+            margin: 1em 0 0.5em;
+        }
+        input[type="checkbox"], input[type="number"], input[type="submit"], select {
+            padding: 0.5em;
+            font-size: 1em;
+            margin-bottom: 1em;
+            border: none;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #191414;
+            color: #FFFFFF;
+            cursor: pointer;
+            width: 150px;
+        }
+        input[type="submit"]:hover {
+            background-color: #FFFFFF;
+            color: #1DB954;
+        }
+        #histogram {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Decades</h1>
+        <form action="/create_playlists_by_year" method="post">
+            <label>What decade/s would you like to make playlists for?</label>
+            <div>
+                <input type="checkbox" name="decades" value="1940s"> 1940s<br>
+                <input type="checkbox" name="decades" value="1950s"> 1950s<br>
+                <input type="checkbox" name="decades" value="1960s"> 1960s<br>
+                <input type="checkbox" name="decades" value="1970s"> 1970s<br>
+                <input type="checkbox" name="decades" value="1980s"> 1980s<br>
+                <input type="checkbox" name="decades" value="1990s"> 1990s<br>
+                <input type="checkbox" name="decades" value="2000s"> 2000s<br>
+                <input type="checkbox" name="decades" value="2010s"> 2010s<br>
+                <input type="checkbox" name="decades" value="2020s"> 2020s<br>
+                <input type="checkbox" name="decades" value="all"> All of the above<br>
+            </div>
+            <label>Would you like to set a maximum number of songs for each playlist?</label>
+            <input type="radio" name="set_max_songs" value="yes" required> Yes<br>
+            <label>Please specify:</label>
+            <input type="number" name="max_songs"><br>
+            <input type="radio" name="set_max_songs" value="no" required> No<br>
+            <input type="submit" value="Submit">
+        </form>
+        <canvas id="histogram"></canvas>
+    </div>
+    <script>
+        async function fetchHistogramData() {
+            const response = await fetch('/get_histogram_data');
+            const data = await response.json();
+            return data;
+        }
+
+        async function renderHistogram() {
+            const data = await fetchHistogramData();
+            const ctx = document.getElementById('histogram').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        label: 'Number of Songs',
+                        data: Object.values(data),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderHistogram);
+    </script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# List of dependencies
+Flask==3.0.3
+spotipy==2.24.0

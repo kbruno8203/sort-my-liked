@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #191414;
+            color: #FFFFFF;
+            font-family: 'Circular', 'Helvetica', 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #1DB954;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 1em;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            fetch('/perform_remove_duplicates')
+                .then(response => response.text())
+                .then(html => {
+                    document.body.innerHTML = html;
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Working...</h1>
+    </div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SortMyLiked Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #191414;
+            color: #FFFFFF;
+            font-family: 'Circular', 'Helvetica', 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .box {
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1, h2, h3, p {
+            margin: 0 0 10px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #1DB954;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #1ED760;
+        }
+        .chart {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>SortMyLiked Dashboard</h1>
+        <nav>
+            <a href="/make_playlists" class="button">Make Playlists</a>
+            <a href="/remove_duplicates" class="button">Remove Duplicates</a>
+        </nav>
+    </header>
+    <section class="container">
+        <div class="box">
+            <h2>Total Number of Liked Songs</h2>
+            <p>{{ user_data.num_liked_songs }}</p>
+        </div>
+        <div class="box">
+            <h2>Liked Songs Not in a Playlist</h2>
+            <p>{{ user_data.liked_songs_not_in_playlist }}</p>
+        </div>
+        <div class="box">
+            <h2>You Have More Liked Songs Than</h2>
+            <p>10% of Spotify Users</p>
+        </div>
+        <div class="box">
+            <h2>Your Songs By Year</h2>
+            <canvas id="songYearChart" class="chart"></canvas>
+        </div>
+        <div class="box">
+            <h2>Your Most Frequently Liked Artists</h2>
+            <ul>
+                {% for artist in user_data.most_frequently_liked_artists %}
+                <li>{{ artist.name }} (fan since {{ artist.followers.total }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="box">
+            <h2>Your Most Played Liked Songs</h2>
+            <ul>
+                {% for track in user_data.most_played_liked_songs %}
+                <li>{{ track.name }} by {{ track.artists[0].name }} ({{ track.popularity }} plays)</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="box">
+            <h2>Your Genre Breakdown</h2>
+            <!-- Placeholder for genre breakdown -->
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const songYearData = JSON.parse('{{ user_data.song_distribution_by_year | tojson | safe }}');
+            const ctx = document.getElementById('songYearChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(songYearData),
+                    datasets: [{
+                        label: 'Number of Songs',
+                        data: Object.values(songYearData),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

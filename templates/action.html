@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pick an Action</title>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #191414;
+            color: #FFFFFF;
+            font-family: 'Circular', 'Helvetica', 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #1DB954;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 1em;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            background-color: #191414;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #FFFFFF;
+            color: #1DB954;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome! What would you like to do today?</h1>
+        <a href="/make_playlists" class="button">Make Playlists</a>
+        <a href="/remove_duplicates" class="button">Remove Duplicates</a>
+        <a href="/make_playlists_by_year" class="button">Make Playlists by Year</a>
+    </div>
+</body>
+</html>
